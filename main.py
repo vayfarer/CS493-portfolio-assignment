@@ -190,9 +190,18 @@ def check_jwt():
 ################################################################################
 # API
 ################################################################################
+def res_error(msg:str, code:int):
+    error = {'Error': msg}
+    res = make_response(json.dumps(error), code)
+    res.mimetype = 'application/json'
+    return res
+
 
 @app.route('/users', methods=['GET'])
 def users_get():
+    if not request.accept_mimetypes.accept_json:
+        return res_error("application/json response only", 406)
+
     if request.method == 'GET':
         query = client.query(kind=constants.users)
         results = list(query.fetch())
@@ -203,24 +212,14 @@ def users_get():
         return res
 
 
-def res_error(msg:str, code:int):
-    error = {'Error': msg}
-    res = make_response(json.dumps(error), code)
-    res.mimetype = 'application/json'
-    return res
-
-
-# def get_user(user_sub):
-#     query = client.query(kind=constants.users)
-#     query.add_filter("user_sub", "=", user_sub)
-#     user_list = list(query.fetch())
-#     if user_list:
-#         return list(query.fetch())[0]
-#     else:
-#         new_user = datastore.entity.Entity(key=client.key(constants.users))
-#         new_user.update({'user_sub': user_sub, 'boats': []})
-#         client.put(new_user)
-#         return new_user
+def get_user(user_sub):
+    query = client.query(kind=constants.users)
+    query.add_filter("user_sub", "=", user_sub)
+    user_list = list(query.fetch())
+    if user_list:
+        return True
+    else:
+        return False
 
 
 @app.route('/boats', methods=['POST', 'GET'])
@@ -235,6 +234,9 @@ def boats_post_get():
         return res_error("application/json response only", 406)
 
     if request.method == 'POST':
+        if not get_user(payload['sub']):
+            return res_error("User not registered", 403)
+
         content = request.get_json()
         if "name" not in content or "type" not in content or "length" not in content:
             return res_error('The request object is missing at least one of the required attributes', 400)
