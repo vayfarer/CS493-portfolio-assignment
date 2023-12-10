@@ -183,7 +183,13 @@ def logout():
 def check_jwt():
     try:
         payload = verify_jwt(request)
-        return "", 200
+        query = client.query(kind=constants.users)
+        query.add_filter("user_sub", "=", payload['sub'])
+        user_list = list(query.fetch())
+        if user_list:
+            return "", 200
+        return (json.dumps({"Error":"User not registered"}), 403)
+
     except AuthError as error:
         return handle_auth_error(error)
 
