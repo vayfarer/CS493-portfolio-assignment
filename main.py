@@ -1,5 +1,6 @@
 # Michael Chen
-# OSU CS 493 Assignment
+# OSU CS 493 Portfolio Assignment
+# 12/10/2023
 
 """Python Flask WebApp Auth0 integration example
 Based on https://auth0.com/docs/quickstart/webapp/python#setup-your-routes
