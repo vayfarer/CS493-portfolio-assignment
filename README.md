@@ -7,3 +7,8 @@ Users are authorized via Auth0 provided jwt. Authorized Users may perform CRUD o
 1) Set up gcloud CLI https://cloud.google.com/sdk/docs/install
 2) Set up Google Cloud App Engine (python): https://cloud.google.com/appengine/docs/standard/python3/building-app
 3) Clone this project and run `gcloud init` and `gcloud app deploy` as described in documentation linked in previous step.
+
+## API
+See https://github.com/vayfarer/CS493-portfolio-assignment/blob/master/API_documentation.pdf
+
+API endpoint is hosted on Google App Engine at: https://clean-utility-402919.uw.r.appspot.com/
